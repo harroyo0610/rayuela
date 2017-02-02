@@ -45,24 +45,15 @@ function drawCells(){
 function moveCoin(jugador){
   clearInterval(intervalo);
   player = $(jugador).find(".active");
+  player.next().addClass("active");
+  player.removeClass("active");
 
-  if ($(player).attr("id") != "celda91") {
-    player.next().addClass("active");
-    player.removeClass("active");
+  if ($(player).attr("id") == "celda91" || flag_1 == true && jugador == "#Player1") {
+    console.log("entre player1");
+  }else if ($(player).attr("id") == "celda91" || flag_2 == true && jugador == "#Player2") {
+    console.log("entre jugador2");
+  }else{
     setTimeout(function(){ moveCoin(jugador) }, 80);
-
-    if (flag_1) {
-      clearTimeout(moveCoin(jugador));
-      console.log("jugador1");
-      flag_1 = false;
-    }else if (flag_2) {
-      clearTimeout(moveCoin(jugador));
-      console.log("jugador2");
-      flag_2 = false;    
-    }  
-  }
-  else{
-    clearTimeout(function(){ moveCoin(jugador) });
   };
 };
 
@@ -72,11 +63,9 @@ $(document).keyup(function(event){
   if (event.keyCode == 37 ) {
     flag_1 = true;
     console.log("banderita1");
-    //clearTimeout(function(){ moveCoin(jugador) });
   }
   else if (event.keyCode == 39) {
     flag_2 = true;
     console.log("banderita2");
-    //clearTimeout(function(){ moveCoin(jugador) });
   };
 });
