@@ -1,9 +1,9 @@
-var flag_1 = false;
-var flag_2 = false;
-
 $(document).ready(function() {
+  flag_1 = false;
+  flag_2 = false;
+  //Dibuja las celdas
   drawCells();
-
+  //Click en jugar
 	$("#start_btn").on("click", function(){
     var start = new Date;
     intervalo = setInterval(function() {
@@ -18,59 +18,15 @@ $(document).ready(function() {
         $('#counter_start').text("Empieza!"); 
         $("#start_btn").text("Reiniciar");
 
-        moveCoin("#Player1", null);
-        //stopCoin => bind con keyup/down/press
-        moveCoin("#Player2", null);
-        //stopCoin => bind con keyup/down/press
-        // stopCoin();
-        $(document).bind("keyup", stopCoin());
+        moveCoin("#Player1");
+        moveCoin("#Player2");
       };
         
     }, 1000);
   })
-
-
-
 });
 
-function moveCoin(jugador, player_stop){
-  clearInterval(intervalo);
-  player = $(jugador).find(".active");
-  if ($(player).attr("id") == "celda90") { 
-    clearTimeout(function(){ moveCoin(jugador, null) });        
-  }
-  else{
-    if (player_stop != null) {
-      if (player_stop == "Player1") {
-
-        if (flag_1) {
-          //clearTimeout(function(){ moveCoin(jugador, null) });
-          //player.removeClass("active");
-          console.log("banderita1");
-          console.log(jugador);
-        }
-
-      }
-
-      else if (player_stop == "Player2") {
-
-        if (flag_2) {
-          clearTimeout(function(){ moveCoin(jugador, null) });
-          console.log("banderita2");
-          console.log(jugador);
-
-        }
-
-      }
-    }else{
-      player.next().addClass("active");
-      player.removeClass("active");
-      setTimeout(function(){ moveCoin(jugador, null) }, 80);
-    };
-  };
-
-};
-
+//Funcion que dibuja las celdas
 function drawCells(){
   for (var i = 1; i <= 100; i++) {
     $("tr").append("<td></td>").children();
@@ -85,17 +41,67 @@ function drawCells(){
   $("#Player2").children().eq(90).addClass("lost_zone");
 }
 
-function stopCoin(){
-  $(document).keyup(function(event){
+//Mueve la moneda
+function moveCoin(jugador){
 
-    if (event.keyCode == 37 ) {
-      flag_1 = true;
-      moveCoin("#Player1", "Player1");
-    }
-    else if (event.keyCode == 39) {
-      flag_2 = true;
-      moveCoin("#Player2", "Player2");
+  clearInterval(intervalo);
+  player = $(jugador).find(".active");
 
-    };
-  });
-}
+  if ($(player).attr("id") != "celda90") {
+    if (flag_1) {
+      console.log("jugador1");
+    }else if (flag_2) {
+      console.log("jugador2");
+    }else{ 
+      player.next().addClass("active");
+      player.removeClass("active");
+      setTimeout(function(){ moveCoin(jugador) }, 80); 
+    }  
+  }
+  else{
+    clearTimeout(function(){ moveCoin(jugador) });
+  };
+};
+
+//Funcion que detecta el evento keyup
+$(document).keyup(function(event){
+
+  if (event.keyCode == 37 ) {
+    flag_1 = true;
+    //clearTimeout(function(){ moveCoin(jugador) });
+  }
+  else if (event.keyCode == 39) {
+    flag_2 = true;
+    //clearTimeout(function(){ moveCoin(jugador) });
+  };
+});
+
+
+
+
+
+
+  // else{
+  //   if (player_stop != null) {
+  //     if (player_stop == "Player1") {
+
+  //       if (flag_1) {
+  //         //clearTimeout(function(){ moveCoin(jugador, null) });
+  //         //player.removeClass("active");
+  //         console.log("banderita1");
+  //         console.log(jugador);
+  //       }
+
+  //     }
+
+  //     else if (player_stop == "Player2") {
+
+  //       if (flag_2) {
+  //         //clearTimeout(function(){ moveCoin(jugador, null) });
+  //         console.log("banderita2");
+  //         console.log(jugador);
+
+  //       }
+
+  //     }
+  //   }
