@@ -4,7 +4,11 @@ $(document).ready(function() {
   //Dibuja las celdas
   drawCells();
   //Click en jugar
-	$("#start_btn").on("click", function(){
+	clickButton();
+});
+function clickButton(){
+  $("#start_btn").on("click", function(){
+    
     var start = new Date;
     intervalo = setInterval(function() {
       counter = Math.round((new Date - start) / 1000)
@@ -17,15 +21,14 @@ $(document).ready(function() {
       }else if (counter == 4) {
         $('#counter_start').text("Empieza!"); 
         $("#start_btn").text("Reiniciar");
-
+        
         moveCoin("#Player1");
         moveCoin("#Player2");
       };
         
     }, 1000);
   })
-});
-
+}
 //Funcion que dibuja las celdas
 function drawCells(){
   for (var i = 1; i <= 100; i++) {
@@ -47,25 +50,34 @@ function moveCoin(jugador){
   player = $(jugador).find(".active");
   player.next().addClass("active");
   player.removeClass("active");
-
-  if ($(player).attr("id") == "celda91" || flag_1 == true && jugador == "#Player1") {
-    console.log("entre player1");
-  }else if ($(player).attr("id") == "celda91" || flag_2 == true && jugador == "#Player2") {
-    console.log("entre jugador2");
+  position_p1 = $("#Player1").find(".active").index();
+  position_p2 = $("#Player2").find(".active").index();
+  if ($(player).attr("id") == "celda99" || flag_1 == true && jugador == "#Player1") {
+    winner(position_p1, position_p2);
+  }else if ($(player).attr("id") == "celda99" || flag_2 == true && jugador == "#Player2") {
+    winner(position_p1, position_p2);
   }else{
-    setTimeout(function(){ moveCoin(jugador) }, 80);
+    setTimeout(function(){ moveCoin(jugador) }, 21);
   };
 };
-
+function winner(position_p1, position_p2){
+  if (position_p1 > 90 && position_p2 > 90) {
+    $("#winner_player").html("Ambos perdieron").css("text-align","right");
+    $("tr").css("background-color","red");
+  }else if (position_p1 < 90 && position_p1 > position_p2 ) {
+    $("#winner_player").html("Player1").css("text-align","right");
+  }else if (position_p2 < 90 && position_p2 > position_p1 ) {
+    $("#winner_player").html("Player2").css("text-align","right");
+  };
+}
 //Funcion que detecta el evento keyup
 $(document).keyup(function(event){
 
   if (event.keyCode == 37 ) {
     flag_1 = true;
-    console.log("banderita1");
   }
   else if (event.keyCode == 39) {
     flag_2 = true;
-    console.log("banderita2");
+
   };
 });
