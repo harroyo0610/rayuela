@@ -1,19 +1,33 @@
 $(document).ready(function() {
   flag_1 = false;
   flag_2 = false;
+  contador = 0 
   //Dibuja las celdas
   drawCells();
   //Click en jugar
 	clickButton();
 });
+
+
+
 function clickButton(){
-  $("#start_btn").on("click", function(){
-    
+  $("#start_btn").on("click", function(){ 
     var start = new Date;
     intervalo = setInterval(function() {
       counter = Math.round((new Date - start) / 1000)
       if (counter == 1) {
+        if (contador > 0) {
+          console.log(contador);
+          $("#player1").nextAll().empty();
+          //$("#tablero").load('././app/views/index.erb', function(){
+            drawCells();
+          //});
+          contador += 1
+          $('#counter_start').text(3);
+        }else{
+          contador += 1
         $('#counter_start').text(3);
+        };
       }else if (counter == 2) {
         $('#counter_start').text(2); 
       }else if (counter == 3) {
@@ -43,7 +57,7 @@ function drawCells(){
   $("#Player1").children().eq(90).addClass("lost_zone");
   $("#Player2").children().eq(90).addClass("lost_zone");
 }
-
+player_win = ""
 //Mueve la moneda
 function moveCoin(jugador){
   clearInterval(intervalo);
@@ -53,22 +67,26 @@ function moveCoin(jugador){
   position_p1 = $("#Player1").find(".active").index();
   position_p2 = $("#Player2").find(".active").index();
   if ($(player).attr("id") == "celda99" || flag_1 == true && jugador == "#Player1") {
-    winner(position_p1, position_p2);
+    player_win = winner(position_p1, position_p2);
   }else if ($(player).attr("id") == "celda99" || flag_2 == true && jugador == "#Player2") {
-    winner(position_p1, position_p2);
+    player_win = winner(position_p1, position_p2);
   }else{
     setTimeout(function(){ moveCoin(jugador) }, 21);
   };
 };
 function winner(position_p1, position_p2){
   if (position_p1 > 90 && position_p2 > 90) {
-    $("#winner_player").html("Ambos perdieron").css("text-align","right");
-    $("tr").css("background-color","red");
+    return winPlayer("Ambos Perdieron");
   }else if (position_p1 < 90 && position_p1 > position_p2 ) {
-    $("#winner_player").html("Player1").css("text-align","right");
+    return winPlayer("Player1");
   }else if (position_p2 < 90 && position_p2 > position_p1 ) {
-    $("#winner_player").html("Player2").css("text-align","right");
+    return winPlayer("Player2");
   };
+}
+function winPlayer(text){
+  $.post("/index/2", {"winner" : text}, setTimeout(function(){
+    $("#winner_player").html(text);
+  }, 100));
 }
 //Funcion que detecta el evento keyup
 $(document).keyup(function(event){
